@@ -3,7 +3,7 @@ import gensim
 
 
 def read_all_articles(path_name):
-    f2 = open(path_name+"all_sentences.txt", "w+")
+    f2 = open("./data/sentences/all_sentences.txt", "w+")
     path_dir = os.listdir(path_name)
     for i in path_dir:
         article_path = os.path.join(path_name, i)
@@ -29,5 +29,8 @@ class MySentences():
                 yield line.split()
 
 
-sentences = MySentences("./data/articles/all_sentences.txt")
-
+sentences = MySentences("./data/sentences/all_sentences.txt")
+model = gensim.models.Word2Vec(size=200, sg =1, min_count=2)
+model.build_vocab(sentences)
+model.train(sentences=sentences, total_examples=model.corpus_count, epochs=10)
+model.save("./data/word2vec_model/articles_model")
